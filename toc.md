@@ -53,8 +53,6 @@ docs.vmware.com is built.
   - [Troubleshoot installing](troubleshooting-tap/troubleshoot-install-tap.md)
   - [Troubleshoot using](troubleshooting-tap/troubleshoot-using-tap.md)
   - [Troubleshoot components](troubleshooting-tap/troubleshoot-components.md)
-- [Security and Compliance](security-and-compliance/tap-nist-matrix.hbs.md)
-  - [Tanzu Application Platform NIST matrix](security-and-compliance/tap-nist-matrix.hbs.md)
 - [Component documentation](components.md)
     - [Overview of Tanzu Application Platform components](components.md)
     - [Tanzu CLI](cli-plugins/tanzu-cli.md)
