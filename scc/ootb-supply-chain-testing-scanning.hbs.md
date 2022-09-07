@@ -325,6 +325,55 @@ Create workload:
      15 + |        branch: main
      16 + |      url: https://github.com/sample-accelerators/tanzu-java-web-app
 ```
+## <a id="cve-triage-workflow"></a> CVE Triage Workflow
+
+The Supply Chain halts progression if either a SourceScan (`sourcescans.scanning.apps.tanzu.vmware.com`) or an ImageScan (`imagescans.scanning.apps.tanzu.vmware.com`) fails policy enforcement through the [ScanPolicy](../scst-scan/policies.hbs.md#define-a-rego-file-for-policy-enforcement) (`scanpolicies.scanning.apps.tanzu.vmware.com`). This can prevent source code from being built or images from being deployed that contain vulnerabilities that are in violation of the user-defined scan policy. If you have triaged these vulnerabilities and identified any false positives, refer to this section on how to unblock your deployment from these CVEs.
+
+### <a id="sc-stop"></a>Confirming Supply Chain stopped due failed policy enforcement
+
+Verify if the status of the workload is `MissingValueAtPath` due to waiting on a `.status.compliantArtifact` from either the SourceScan or ImageScan:
+
+```console
+kubectl describe workload WORKLOAD-NAME -n DEVELOPER-NAMESPACE
+```
+
+Next describe the SourceScan or ImageScan to determine what CVE(s) violated the ScanPolicy:
+
+```
+kubectl describe sourcescan NAME -n DEVELOPER-NAMESPACE
+kubectl describe imagescan NAME -n DEVELOPER-NAMESPACE
+```
+
+### <a id="triage-cve"></a>Triage
+
+Review the CVEs reported in the previous step to determine next steps to remediate. To possible paths from here are:
+
+- Update the component to remove the CVE
+- Amend the scan policy with an exception if you decide to accept the CVE and unblock your supply chain
+
+>**Relevant Context:** For additional information on common vulnerability scanner limitations, see [Supply Chain Security Tools - Scan](../scst-scan/overview.hbs.md#scst-scan-note).
+
+#### <a id="update-component"></a>Updating the component
+
+Determine which package introduces the CVE. If the [Tanzu Insight CLI plug-in](../cli-plugins/insight/cli-overview.hbs.md) is configured, you can query the database for the packages and CVEs that your source code or image contains:
+
+```console
+tanzu insight source get --repo REPO --org ORG
+tanzu insight image get --digest DIGEST
+```
+
+See [Query using the Tanzu Insight CLI plug-in](../cli-plugins/insight/query-data.hbs.md) for more details.
+
+Determine if updating the component will resolve the vulnerability. Vulnerabilities that occur in older versions of a package could be resolved in newer versions. Information pertaining to CVEs can be found in, but is not limited to, the [National Vulnerability Database](https://nvd.nist.gov/vuln) or the release page of a package.
+
+> **Note:** You can also use your project's package manager tools to identify transitive or indirect dependencies. For example, `go mod graph` for projects in Go.
+
+#### <a id="amend-scan-policy"></a>Amending the scan policy
+
+After analyzing the CVE(s), if a developer decides to proceed without remediating the CVE (e.g. **when a CVE has been triaged and evaluated to be a false positive**), the ScanPolicy can be amended to ignore CVE(s). 
+See [Writing Policy Templates](../scst-scan/policies.md) for more details.
+
+Under RBAC, users with the `app-operator-scanning` role (part of the `app-operator` aggregate role), have permission to modify the ScanPolicy. See [Detailed role permissions breakdown](../authn-authz/permissions-breakdown.hbs.md) for more information.
 
 ## <a id="scan-image-using-snyk"></a> Scan Image using Snyk
 
