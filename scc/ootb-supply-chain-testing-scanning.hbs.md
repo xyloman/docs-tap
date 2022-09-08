@@ -128,9 +128,9 @@ The names of the objects **must** match the ones in the example with default ins
         policy: SCAN-POLICY
         template: SCAN-TEMPLATE
     ```
-    
+
     Where `SCAN-POLICY` and `SCAN-TEMPLATE` are the names of the `ScanPolicy` and `ScanTemplate`.
-  
+
 - To override via workload parameters, you can use the following commands. For more details, see [Tanzu apps workload commands](../cli-plugins/apps/command-reference/tanzu-apps-workload-update.hbs.md).
 
     ```
@@ -138,7 +138,7 @@ The names of the objects **must** match the ones in the example with default ins
     tanzu apps workload update WORKLOAD --param "scanning_source_template=SCAN-TEMPLATE" -n DEV-NAMESPACE
     ```
 
-    Where: 
+    Where:
 
     - `WORKLOAD` is the name of the workload.
     - `SCAN-POLICY` and `SCAN-TEMPLATE` are the names of the `ScanPolicy` and `ScanTemplate`.
@@ -406,4 +406,4 @@ Under RBAC, users with the `app-operator-scanning` role (part of the `app-operat
 
 ## <a id="scan-image-using-snyk"></a> Scan Image using Snyk
 
-[Supply Chain Security Tools - Scan](../scst-scan/install-scst-scan.md) includes additional integration for running an image scan using Snyk and VMware Carbon Black. For information on how to install this integration and how to modify the supply chain template, see [Available Scanners for Supply Chain Security Tools - Scan](../scst-scan/available-scanners.hbs.md).
+[Supply Chain Security Tools - Scan](../scst-scan/install-scst-scan.md) includes additional integration for running an image scan using Snyk and VMware Carbon Black. For information on how to install this integration and how to modify the supply chain template, see [Install Snyk scanner](../scst-scan/install-snyk-integration.md).
