@@ -66,6 +66,35 @@ Follow these steps to define a Rego file for policy enforcement that you can reu
         }
     ```
 
+    You can modify the following fields of the Rego file as part of the [CVE triage workflow](../scc/ootb-supply-chain-testing-scanning.hbs.md#cve-triage-workflow):
+    
+    - `notAllowedSeverities` contains the categories of CVEs that result in the SourceScan or ImageScan failing policy enforcement. Below is an example of how an `app-operator` might decide to only block "Critical" and "High" CVEs.
+
+      ```yaml
+      ...
+      spec:
+        regoFile: |
+          package main
+
+          # Accepted Values: "Critical", "High", "Medium", "Low", "Negligible", "UnknownSeverity"
+          notAllowedSeverities := ["Critical", "High"]
+          ignoreCves := []
+      ...
+      ```
+
+    - `ignoreCves` contains individual ignored CVEs when determining policy enforcement. Below is an example of how an `app-operator` might decide to ignore `CVE-2018-14643` and `GHSA-f2jv-r9rf-7988` if they are false positives. See [A Note on Vulnerability Scanners](overview.hbs.md#scst-scan-note) for more details.
+
+      ```yaml
+      ...
+      spec:
+        regoFile: |
+          package main
+
+          notAllowedSeverities := []
+          ignoreCves := ["CVE-2018-14643", "GHSA-f2jv-r9rf-7988"]
+      ...
+      ```
+
 2. Deploy the scan policy to the cluster by running:
 
     ```console
